@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "Allergy Travel",
+    "slug": "allergy-travel",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "allergytravel",
+    "platforms": ["ios", "android"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.allergytravel.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.allergytravel.app"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-location",
+      "expo-secure-store"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

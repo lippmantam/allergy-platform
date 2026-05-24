@@ -1,0 +1,140 @@
+// Allergy Platform — Prisma Schema
+// Database: PostgreSQL + PostGIS on Supabase
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Place {
+  id                      String    @id @default(uuid())
+  name                    String
+  address                 String
+  latitude                Float
+  longitude               Float
+  cuisineType             String    @map("cuisine_type")
+  phone                   String?
+  website                 String?
+  hours                   String?
+  allergenAware           String    @default("unknown") @map("allergen_aware")
+  dateAdded               DateTime  @default(now()) @map("date_added")
+  addedByContributorId    String    @map("added_by_contributor_id")
+  lastVerified            DateTime? @map("last_verified")
+  verificationMethod      String?   @map("verification_method")
+  verifiedByContributorId String?   @map("verified_by_contributor_id")
+  communityConfirmations  Int       @default(0) @map("community_confirmations")
+  completenessScore       Float     @default(0) @map("completeness_score")
+
+  addedBy    Contributor      @relation("PlacesAdded", fields: [addedByContributorId], references: [id])
+  allergens  PlaceAllergen[]
+  reports    StructuredReport[]
+  reviews    NarrativeReview[]
+
+  @@map("place")
+}
+
+model PlaceAllergen {
+  id                 String  @id @default(uuid())
+  placeId            String  @map("place_id")
+  allergenCode       String  @map("allergen_code")
+  accommodationLevel String  @default("aware") @map("accommodation_level")
+  dedicatedKitchen   Boolean @default(false) @map("dedicated_kitchen")
+  sharedFryerRisk    Boolean @default(false) @map("shared_fryer_risk")
+  staffTrainingLevel String  @default("none") @map("staff_training_level")
+  confidenceLevel    String? @map("confidence_level")
+  notes              String?
+
+  place Place @relation(fields: [placeId], references: [id])
+
+  @@unique([placeId, allergenCode])
+  @@map("place_allergen")
+}
+
+model Contributor {
+  id                String   @id
+  displayName       String   @map("display_name")
+  allergenProfile   String[] @map("allergen_profile")
+  contributionCount Int      @default(0) @map("contribution_count")
+  helpfulVotes      Int      @default(0) @map("helpful_votes")
+  trustScore        Float    @default(0) @map("trust_score")
+  verifiedParent    Boolean  @default(false) @map("verified_parent")
+  memberSince       DateTime @default(now()) @map("member_since")
+
+  placesAdded PlaceAllergen[] @relation(name: "PlacesAdded")
+  reports     StructuredReport[]
+  reviews     NarrativeReview[]
+  trustSignals TrustSignal[]
+  disputes    Dispute[]
+
+  @@map("contributor")
+}
+
+model StructuredReport {
+  id                 String    @id @default(uuid())
+  placeId            String    @map("place_id")
+  contributorId      String    @map("contributor_id")
+  allergensConfirmed String[]  @map("allergens_confirmed")
+  reactionStatus     String    @map("reaction_status")
+  verificationMethod String    @map("verification_method")
+  visitDate          DateTime  @map("visit_date")
+  partyType          String    @map("party_type")
+  severityLevel      String    @map("severity_level")
+  languageUsed       String?   @map("language_used")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  deletedAt          DateTime? @map("deleted_at")
+
+  place       Place       @relation(fields: [placeId], references: [id])
+  contributor Contributor @relation(fields: [contributorId], references: [id])
+
+  @@map("structured_report")
+}
+
+model NarrativeReview {
+  id             String    @id @default(uuid())
+  placeId        String    @map("place_id")
+  contributorId  String    @map("contributor_id")
+  experienceText String    @map("experience_text")
+  safetyRating   Int       @map("safety_rating")
+  tips           String?
+  photoUrls      String[]  @map("photo_urls")
+  cuisineContext String?   @map("cuisine_context")
+  wouldReturn    String    @map("would_return")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  deletedAt      DateTime? @map("deleted_at")
+
+  place       Place       @relation(fields: [placeId], references: [id])
+  contributor Contributor @relation(fields: [contributorId], references: [id])
+
+  @@map("narrative_review")
+}
+
+model TrustSignal {
+  id            String   @id @default(uuid())
+  targetId      String   @map("target_id")
+  targetType    String   @map("target_type")
+  contributorId String   @map("contributor_id")
+  signalType    String   @map("signal_type")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  contributor Contributor @relation(fields: [contributorId], references: [id])
+
+  @@map("trust_signal")
+}
+
+model Dispute {
+  id         String   @id @default(uuid())
+  targetId   String   @map("target_id")
+  targetType String   @map("target_type")
+  raisedBy   String   @map("raised_by")
+  reason     String
+  status     String   @default("open")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  contributor Contributor @relation(fields: [raisedBy], references: [id])
+
+  @@map("dispute")
+}

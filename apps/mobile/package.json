@@ -1,0 +1,26 @@
+{
+  "name": "@allergy-platform/mobile",
+  "version": "0.0.1",
+  "private": true,
+  "main": "expo-router/entry",
+  "scripts": {
+    "dev":        "expo start",
+    "build":      "echo 'Mobile build handled by Expo EAS — run: eas build'",
+    "lint":       "eslint app components",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@allergy-platform/shared":     "workspace:*",
+    "@supabase/supabase-js":        "^2",
+    "expo":                         "~51",
+    "expo-router":                  "~3",
+    "expo-location":                "~17",
+    "expo-secure-store":            "~13",
+    "react":                        "18.2.0",
+    "react-native":                 "0.74.0"
+  },
+  "devDependencies": {
+    "@types/react":   "~18.2",
+    "typescript":     "^5"
+  }
+}
