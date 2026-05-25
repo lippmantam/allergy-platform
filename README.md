@@ -88,6 +88,10 @@ This is a non-profit, community-governed project. No ads. No monetisation. Peopl
 
 Anchored to Health Canada's priority allergen list. Covers 21 allergens across 8 families including all 9 tree nut sub-types, with canonical codes, hidden names, and cross-reactivity data.
 
+## Documentation
+
+- [Product specification](docs/spec.md) — full product spec including architecture, data model, RLS policies, and roadmap
+
 ## Licence
 
 MIT — see [LICENSE](LICENSE)
