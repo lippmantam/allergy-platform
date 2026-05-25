@@ -26,5 +26,11 @@ Thumbs.db
 # Expo
 .expo/
 
+# Next.js auto-generated
+next-env.d.ts
+
+# Test artifacts
+test-result.txt
+
 # Product Spec
 allergy-travel-platform-spec.md
