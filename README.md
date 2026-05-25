@@ -74,7 +74,7 @@ pnpm dev
 
 | App | URL | Description |
 |-----|-----|-------------|
-| Web | http://localhost:3000 | Next.js planning interface |
+| Web | http://localhost:3002 | Next.js planning interface |
 | API | http://localhost:3001 | Fastify REST API |
 | Mobile | Expo Go app | Scan QR code from terminal |
 
