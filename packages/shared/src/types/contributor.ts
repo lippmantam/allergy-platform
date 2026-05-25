@@ -18,9 +18,3 @@ export interface ContributorPublicProfile {
   verifiedParent: boolean
   memberSince: string
 }
-
-export interface UpdateContributorInput {
-  displayName?: string
-  allergenProfile?: AllergenCode[]
-  verifiedParent?: boolean
-}

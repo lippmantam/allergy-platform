@@ -64,7 +64,8 @@ model Contributor {
   verifiedParent    Boolean  @default(false) @map("verified_parent")
   memberSince       DateTime @default(now()) @map("member_since")
 
-  placesAdded PlaceAllergen[] @relation(name: "PlacesAdded")
+//  placesAdded PlaceAllergen[] @relation(name: "PlacesAdded")
+  placesAdded Place[] @relation("PlacesAdded")
   reports     StructuredReport[]
   reviews     NarrativeReview[]
   trustSignals TrustSignal[]

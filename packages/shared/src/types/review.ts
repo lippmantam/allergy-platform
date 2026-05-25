@@ -56,24 +56,3 @@ export interface Dispute {
   status: DisputeStatus
   createdAt: string
 }
-
-export interface CreateStructuredReportInput {
-  placeId: string
-  allergensConfirmed: AllergenCode[]
-  reactionStatus: ReactionStatus
-  verificationMethod: VerificationMethod
-  visitDate: string
-  partyType: PartyType
-  severityLevel: SeverityLevel
-  languageUsed?: string
-}
-
-export interface CreateNarrativeReviewInput {
-  placeId: string
-  experienceText: string
-  safetyRating: number
-  tips?: string
-  photoUrls?: string[]
-  cuisineContext?: string
-  wouldReturn: WouldReturn
-}
