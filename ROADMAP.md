@@ -68,6 +68,22 @@ API routes and web UI for the two community content types already in the schema.
 
 ---
 
+## Web UI Design (cross-phase)
+
+Design spec produced in `allergynav-design-spec.md` (v1.1). Applied to the web app.
+
+- [x] Design system — Nunito/Nunito Sans fonts, brand color tokens, CSS custom properties, responsive breakpoints
+- [x] Homepage — hero with animated badge + decorative blobs, allergen chip search form, restaurant card grid, CTA strip
+- [x] Navigation — multi-color logo, desktop horizontal nav, mobile fixed bottom tab bar
+- [x] PlaceCard — 5px cuisine-category top stripe, cuisine emoji, ✓/⚠ allergen safety tags
+- [ ] SVG icons for Peanut, Sesame, Cashew, Almond, Walnut, Mustard (emoji placeholders in use)
+- [ ] Search page — apply design system
+- [ ] Place detail page — apply design system
+- [ ] Auth pages (sign-in, sign-up) — apply design system
+- [ ] Profile page — apply design system
+
+---
+
 ## Phase 3 — The Knowledge Base
 
 **Goal:** Add contextual, evergreen travel intelligence alongside the place data.

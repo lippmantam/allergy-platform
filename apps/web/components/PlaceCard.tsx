@@ -1,61 +1,156 @@
 import Link from 'next/link'
 import type { Place } from '../lib/api'
 
-const AWARE_STYLES: Record<string, { dot: string; label: string }> = {
-  yes: { dot: 'bg-green-500', label: 'Allergen aware' },
-  no: { dot: 'bg-red-400', label: 'Not allergen aware' },
-  unknown: { dot: 'bg-gray-400', label: 'Unknown' },
+// Cuisine type → top stripe color (spec §3)
+const CUISINE_STRIPE: [string, string][] = [
+  ['vegan',          '#2BAE82'],
+  ['plant-based',    '#2BAE82'],
+  ['thai',           '#E85D26'],
+  ['spicy',          '#E85D26'],
+  ['indian',         '#F5A623'],
+  ['south asian',    '#F5A623'],
+  ['café',           '#E879A0'],
+  ['cafe',           '#E879A0'],
+  ['brunch',         '#E879A0'],
+  ['coffee',         '#E879A0'],
+  ['mediterranean',  '#0EA5E9'],
+  ['middle eastern', '#0EA5E9'],
+  ['greek',          '#0EA5E9'],
+]
+
+function stripeColor(cuisineType: string): string {
+  const lower = cuisineType.toLowerCase()
+  const match = CUISINE_STRIPE.find(([key]) => lower.includes(key))
+  return match ? match[1] : '#3B82F6'
 }
 
-const LEVEL_COLORS: Record<string, string> = {
-  dedicated_section: 'bg-green-100 text-green-800',
-  menu_options: 'bg-blue-100 text-blue-800',
-  aware: 'bg-yellow-100 text-yellow-800',
+// Cuisine type → emoji
+const CUISINE_EMOJI: [string, string][] = [
+  ['italian',        '🍝'],
+  ['thai',           '🍜'],
+  ['japanese',       '🍣'],
+  ['sushi',          '🍱'],
+  ['chinese',        '🥢'],
+  ['korean',         '🍜'],
+  ['vietnamese',     '🍜'],
+  ['indian',         '🍛'],
+  ['south asian',    '🍛'],
+  ['mediterranean',  '🫒'],
+  ['greek',          '🫒'],
+  ['middle eastern', '🧆'],
+  ['mexican',        '🌮'],
+  ['american',       '🍔'],
+  ['burger',         '🍔'],
+  ['pizza',          '🍕'],
+  ['french',         '🥐'],
+  ['vegan',          '🌱'],
+  ['plant-based',    '🌱'],
+  ['café',           '☕'],
+  ['cafe',           '☕'],
+  ['coffee',         '☕'],
+  ['brunch',         '🥞'],
+]
+
+function cuisineEmoji(cuisineType: string): string {
+  const lower = cuisineType.toLowerCase()
+  const match = CUISINE_EMOJI.find(([key]) => lower.includes(key))
+  return match ? match[1] : '🍽️'
+}
+
+// Allergen code → readable name
+const ALLERGEN_NAME: Record<string, string> = {
+  PNUT:    'Peanut',
+  MILK:    'Dairy',
+  EGG:     'Egg',
+  WHEAT:   'Wheat/Gluten',
+  SOY:     'Soy',
+  SES:     'Sesame',
+  FISH:    'Fish',
+  CRUST:   'Shellfish',
+  MOLL:    'Molluscs',
+  'TN-CSH': 'Cashew',
+  'TN-ALM': 'Almond',
+  'TN-WAL': 'Walnut',
+  MUST:    'Mustard',
+  TNUT:    'Tree nuts',
+  SULF:    'Sulphites',
+  CEL:     'Celery',
+  LUP:     'Lupin',
+}
+
+// accommodation level → safe (green ✓) or warn (amber ⚠)
+function isSafe(level: string): boolean {
+  return level === 'dedicated_section' || level === 'menu_options'
 }
 
 type Props = { place: Place }
 
 export default function PlaceCard({ place }: Props) {
-  const aware = AWARE_STYLES[place.allergenAware] ?? AWARE_STYLES.unknown
+  const stripe  = stripeColor(place.cuisineType)
+  const emoji   = cuisineEmoji(place.cuisineType)
+  const visibleAllergens = place.allergens.slice(0, 6)
 
   return (
     <Link
       href={`/places/${place.id}`}
-      className="block bg-white border border-gray-200 rounded-xl p-4 hover:border-teal-400 hover:shadow-sm transition-all"
+      className="block bg-surface-card rounded-card border-2 border-surface-border overflow-hidden
+                 hover:border-[#C8C0B0] hover:-translate-y-[3px] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)]
+                 transition-all duration-200"
     >
-      <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0">
-          <h3 className="font-semibold text-gray-900 truncate">{place.name}</h3>
-          <p className="text-sm text-gray-500 truncate">{place.address}</p>
-        </div>
-        <span className="shrink-0 text-xs font-medium bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+      {/* Cuisine stripe */}
+      <div className="h-[5px] w-full rounded-t-card" style={{ background: stripe }} />
+
+      <div className="p-4 sm:p-[1.1rem_1.15rem_1rem]">
+
+        {/* Cuisine emoji */}
+        <div className="text-[28px] leading-none mb-1.5" aria-hidden="true">{emoji}</div>
+
+        {/* Name */}
+        <h3 className="font-nunito font-extrabold text-[14px] sm:text-[15px] text-ink-heading leading-[1.3] mb-0.5">
+          {place.name}
+        </h3>
+
+        {/* Cuisine type */}
+        <p className="font-nunito-sans font-semibold text-[12px] text-ink-subtle mb-0.5">
           {place.cuisineType}
-        </span>
-      </div>
+        </p>
 
-      <div className="mt-3 flex items-center gap-2">
-        <span className={`w-2 h-2 rounded-full shrink-0 ${aware.dot}`} />
-        <span className="text-xs text-gray-600">{aware.label}</span>
-        {place.hours && (
-          <span className="ml-auto text-xs text-gray-400 truncate">{place.hours}</span>
+        {/* Address */}
+        <p className="font-nunito-sans text-[11.5px] text-ink-faint truncate">
+          {place.address}
+        </p>
+
+        {/* Allergen tags */}
+        {visibleAllergens.length > 0 && (
+          <div className="mt-3 pt-3 border-t border-dashed border-[#F0EAD6]">
+            <div className="flex flex-wrap gap-[5px]">
+              {visibleAllergens.map((a) => {
+                const safe = isSafe(a.accommodationLevel)
+                return (
+                  <span
+                    key={a.allergenCode}
+                    className={`inline-flex items-center font-nunito font-bold text-[11px]
+                                px-[9px] py-[2px] rounded-tag
+                                ${safe
+                                  ? 'bg-safe-bg text-safe-text'
+                                  : 'bg-warn-bg text-warn-text'
+                                }`}
+                  >
+                    {safe ? '✓' : '⚠'}{' '}
+                    {ALLERGEN_NAME[a.allergenCode] ?? a.allergenCode}
+                  </span>
+                )
+              })}
+              {place.allergens.length > 6 && (
+                <span className="font-nunito-sans text-[11px] text-ink-subtle self-center">
+                  +{place.allergens.length - 6} more
+                </span>
+              )}
+            </div>
+          </div>
         )}
-      </div>
 
-      {place.allergens.length > 0 && (
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {place.allergens.slice(0, 6).map((a) => (
-            <span
-              key={a.allergenCode}
-              className={`text-xs font-mono px-1.5 py-0.5 rounded ${LEVEL_COLORS[a.accommodationLevel] ?? 'bg-gray-100 text-gray-600'}`}
-            >
-              {a.allergenCode}
-            </span>
-          ))}
-          {place.allergens.length > 6 && (
-            <span className="text-xs text-gray-400">+{place.allergens.length - 6} more</span>
-          )}
-        </div>
-      )}
+      </div>
     </Link>
   )
 }

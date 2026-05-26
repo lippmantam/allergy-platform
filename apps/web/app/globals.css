@@ -1,3 +1,39 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --color-green:        #2BAE82;
+  --color-green-dark:   #229E74;
+  --color-green-deep:   #1A8A60;
+  --color-green-light:  #E8FAF3;
+  --color-green-mid:    #A8EDD6;
+  --color-orange:       #E85D26;
+  --color-orange-dark:  #D04D1A;
+  --color-amber:        #F5A623;
+  --color-blue:         #3B82F6;
+  --color-safe-bg:      #E8FAF3;
+  --color-safe-text:    #1A8A60;
+  --color-warn-bg:      #FFF4E0;
+  --color-warn-text:    #B87A10;
+  --color-bg:           #FFFDF7;
+  --color-surface:      #ffffff;
+  --color-border:       #EDE6D8;
+  --color-border-nav:   #F0EAD6;
+  --color-text-primary: #2A2520;
+  --color-text-heading: #1A1714;
+  --color-text-muted:   #7A7060;
+  --color-text-subtle:  #B0A898;
+  --color-text-faint:   #C0B8A8;
+}
+
+/* Safe-area-aware bottom padding for mobile tab bar */
+.page-root {
+  padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+}
+
+@media (min-width: 640px) {
+  .page-root {
+    padding-bottom: 0;
+  }
+}

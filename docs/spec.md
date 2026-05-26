@@ -1,8 +1,8 @@
 # Allergy Travel Platform — Product Specification
 
-**Version:** 0.5 (Draft)
-**Date:** 2026-05-23
-**Status:** Planning
+**Version:** 0.6
+**Date:** 2026-05-26
+**Status:** Active development — Phases 1 and 2 complete, Phase 3 in progress
 **Author:** Lippman
 **License:** Open Source (TBD)
 
@@ -17,6 +17,7 @@
 | 0.3 | 2026-05-23 | Added system architecture (Section 13) — full stack decisions, monorepo structure, Fastify API design, Supabase Auth and RLS model. Resolved open questions #2 and #4. |
 | 0.4 | 2026-05-23 | Completed architecture detail — Turborepo scaffold (Section 13.1), root config files, pipeline, shared package layout, full RLS policy SQL with privileged DB functions (Section 13.2). Resolved architecture decisions A and B. |
 | 0.5 | 2026-05-23 | GitHub repository scaffolded and ready to push. Setup instructions documented. Section 6 updated with repository reference. Next step #4 marked complete. |
+| 0.6 | 2026-05-26 | Phases 1 and 2 fully built. Phase 3 language cards complete; cross-reactivity, geo search, and offline cache remaining. UI design system implemented (spec v1.1 in `allergynav-design-spec.md`). Section 6 and Section 17 updated to reflect current state. |
 
 ---
 
@@ -116,42 +117,35 @@ Used while travelling, on mobile, location-aware.
 
 The platform is built in three sequential phases. Each phase delivers standalone value and enables the next.
 
-### Phase 1 — The Data Foundation
+### Phase 1 — The Data Foundation ✅ Complete
 **Goal:** Build and validate the core place database in Toronto.
 
-**Repository:** `https://github.com/YOUR_USERNAME/allergy-platform`
-**Setup guide:** `github-setup-instructions.md` (17-phase checklist, ~30 minutes)
-
-- Structured place records with allergen data
-- Layered data model (see Section 8)
+- Structured place records with allergen data (layered model — see Section 8)
 - Allergen reference tables seeded with Health Canada vocabulary (see Sections 11–12)
-- Seed data: 20–30 Toronto restaurants manually researched and entered
-- Basic search by location and allergen
-- No community features yet
+- 25 seed Toronto restaurants with allergen profiles
+- API: full Place CRUD, allergen upsert/remove, text + allergen search
+- Web: homepage, search, place detail, add-place form
+- Full Turborepo monorepo, Prisma schema, GitHub Actions CI, Supabase Auth + RLS
 
-**Repository scaffold included:**
-- Full Turborepo monorepo with all three apps (`web`, `mobile`, `api`)
-- `packages/shared` — TypeScript types, Zod schemas, allergen vocabulary (all 21 allergens)
-- Prisma schema covering all entities from the ERD
-- GitHub Actions CI pipeline
-- Supabase Auth and RLS policies defined
-- README, CONTRIBUTING, CODE_OF_CONDUCT, issue templates, MIT licence
-
-### Phase 2 — The Community Layer
+### Phase 2 — The Community Layer ✅ Complete
 **Goal:** Transform the directory into a living, community-driven platform.
 
 - Structured reports and narrative reviews attached to place records
-- Contributor profiles and trust scoring
-- Helpful votes, dispute flags, staleness detection
-- Community discussion threads
+- Contributor profiles and trust scoring (40% volume + 40% helpful votes + 20% account age)
+- Helpful votes, outdated flags, dispute raising
+- Staleness detection — reports/reviews older than 12 months flagged
+- Auth: Supabase email/password + magic link, ES256 JWT verified via JWKS with `jose`
+- Web: sign-up/sign-in, report form, review form, contributor profile page, profile edit
 
-### Phase 3 — The Knowledge Base
+### Phase 3 — The Knowledge Base (in progress)
 **Goal:** Add contextual, evergreen travel intelligence.
 
-- Destination guides (city-level allergy travel tips)
-- Cuisine guides (cultural context, common hidden allergens)
-- Language cards (how to communicate allergies in other languages)
-- Contributed by community, curated over time
+- ✅ Language cards — 9 allergens × 8 languages, print-friendly at `/language-cards`
+- ⬜ Cross-reactivity warnings surfaced in search and place detail
+- ⬜ Destination guides — city-level allergy travel tips (Toronto pilot)
+- ⬜ Cuisine guides — cultural context, common hidden allergens by cuisine type
+- ⬜ PostGIS geo search — "near me now" via `ST_DWithin` (architecture item D, §13)
+- ⬜ Offline cache for mobile — core place + allergen data (architecture item C, §13)
 
 ---
 
@@ -1172,26 +1166,25 @@ The platform requires minimum viable data before community launch. Approach:
 
 ## 17. Next Steps
 
-Immediate priorities in order:
-
-1. ~~**Define the allergen vocabulary**~~ ✅ Complete — Sections 11–12
-2. ~~**Design the system architecture**~~ ✅ Complete — Section 13 (stack, API design, auth model)
-3. ~~**Complete architecture detail**~~ ✅ Complete — monorepo scaffold, config files, RLS policies
-4. ~~**Set up GitHub repository**~~ ✅ Complete — scaffold generated, setup instructions documented
-5. **Build Phase 1 MVP** — place record CRUD, basic search, seed data entry
-6. **Recruit founding contributors** — Toronto allergy community outreach
+### Completed
+1. ~~Define the allergen vocabulary~~ ✅ — Sections 11–12
+2. ~~Design the system architecture~~ ✅ — Section 13
+3. ~~Complete architecture detail~~ ✅ — monorepo scaffold, config files, RLS policies
+4. ~~Set up GitHub repository~~ ✅
+5. ~~Build Phase 1 MVP~~ ✅ — place CRUD, search, seed data
+6. ~~Build Phase 2 community layer~~ ✅ — reports, reviews, auth, trust scores, signals, disputes
+7. ~~UI design system~~ ✅ — `allergynav-design-spec.md` v1.1, homepage implemented
 
 ### Immediate next build priorities
 
-Work through the GitHub setup instructions first (17 phases, ~30 minutes). Once the repository is live and Supabase is connected, tackle these in order:
-
 | Priority | Item | What it unlocks |
 |----------|------|----------------|
-| 1 | PostGIS geo query — architecture item D | Core "near me" search — the most important user-facing feature |
-| 2 | Allergen reference table seed — Supabase SQL | Allergen filtering in all search queries |
-| 3 | Place CRUD API routes — `apps/api/src/routes/places.ts` | Ability to add and retrieve place records |
-| 4 | Basic web search UI — `apps/web/app/search/` | First end-to-end flow a user can experience |
-| 5 | Offline data strategy — architecture item C | Required before mobile build begins in earnest |
+| 1 | Apply design system to remaining web pages | Consistent UI across search, place detail, auth, profile |
+| 2 | Cross-reactivity warnings — Phase 3 | Surfaces cashew/pistachio, walnut/pecan warnings in place detail |
+| 3 | PostGIS geo query — architecture item D | Core "near me now" mobile search |
+| 4 | Offline data strategy — architecture item C | Required before mobile build begins in earnest |
+| 5 | Replace fictional seed data with real Toronto restaurants | Required before any community launch |
+| 6 | Recruit founding contributors | Toronto allergy community outreach (Reddit, Facebook, Anaphylaxis Canada) |
 
 ### Remaining architecture decisions
 
