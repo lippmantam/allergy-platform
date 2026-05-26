@@ -1,22 +1,36 @@
+import 'dotenv/config'
 import Fastify from 'fastify'
 import cors    from '@fastify/cors'
-import jwt     from '@fastify/jwt'
+import placesRoutes    from './routes/places.js'
+import allergensRoutes from './routes/allergens.js'
+import reportsRoutes      from './routes/reports.js'
+import reviewsRoutes      from './routes/reviews.js'
+import contributorsRoutes from './routes/contributors.js'
+import trustSignalsRoutes from './routes/trust-signals.js'
+import disputesRoutes     from './routes/disputes.js'
 
 const server = Fastify({ logger: true })
 
-// Plugins
-await server.register(cors, { origin: process.env.CORS_ORIGIN ?? '*' })
-await server.register(jwt,  { secret: process.env.SUPABASE_JWT_SECRET ?? 'dev-secret' })
+await server.register(cors, {
+  origin: process.env.CORS_ORIGIN ?? '*',
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+})
+
+// Initialise request.userId so the type decoration is always present
+server.decorateRequest('userId', '')
 
 // Health check
 server.get('/health', async () => ({ status: 'ok', timestamp: new Date().toISOString() }))
 
-// TODO: Register route plugins
-// await server.register(placesRoutes,      { prefix: '/places' })
-// await server.register(allergensRoutes,   { prefix: '/allergens' })
-// await server.register(reportsRoutes,     { prefix: '/reports' })
-// await server.register(reviewsRoutes,     { prefix: '/reviews' })
-// await server.register(contributorsRoutes,{ prefix: '/contributors' })
+// Routes
+await server.register(placesRoutes,    { prefix: '/places' })
+await server.register(allergensRoutes, { prefix: '/allergens' })
+await server.register(reportsRoutes,      { prefix: '/reports' })
+await server.register(reviewsRoutes,      { prefix: '/reviews' })
+await server.register(contributorsRoutes, { prefix: '/contributors' })
+await server.register(trustSignalsRoutes, { prefix: '/trust-signals' })
+await server.register(disputesRoutes,     { prefix: '/disputes' })
 
 const port = Number(process.env.PORT ?? 3001)
 

@@ -123,6 +123,7 @@ model TrustSignal {
 
   contributor Contributor @relation(fields: [contributorId], references: [id])
 
+  @@unique([contributorId, targetId])
   @@map("trust_signal")
 }
 

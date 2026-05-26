@@ -1,0 +1,511 @@
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
+
+const SEED_CONTRIBUTOR_ID = '00000000-0000-0000-0000-000000000001'
+
+async function main() {
+  // Upsert the seed contributor so re-runs are idempotent
+  await prisma.contributor.upsert({
+    where: { id: SEED_CONTRIBUTOR_ID },
+    update: {},
+    create: {
+      id: SEED_CONTRIBUTOR_ID,
+      displayName: 'AllergyPlatform Seed',
+      allergenProfile: [],
+      contributionCount: 0,
+      helpfulVotes: 0,
+      trustScore: 1.0,
+      verifiedParent: false,
+    },
+  })
+
+  const places: Parameters<typeof prisma.place.create>[0]['data'][] = [
+    {
+      name: 'Trattoria Napoli',
+      address: '593 College St, Toronto, ON M6G 1B2',
+      latitude: 43.6557,
+      longitude: -79.4201,
+      cuisineType: 'Italian',
+      phone: '416-555-0101',
+      website: 'https://trattorianapoli.example.com',
+      hours: 'Tue–Sun 5pm–10pm',
+      allergenAware: 'yes',
+      addedByContributorId: SEED_CONTRIBUTOR_ID,
+      completenessScore: 0.9,
+    },
+    {
+      name: 'Momo House',
+      address: '33 Baldwin St, Toronto, ON M5T 1L1',
+      latitude: 43.6545,
+      longitude: -79.4003,
+      cuisineType: 'Tibetan/Nepali',
+      phone: '416-555-0102',
+      hours: 'Mon–Sat 11:30am–9pm',
+      allergenAware: 'yes',
+      addedByContributorId: SEED_CONTRIBUTOR_ID,
+      completenessScore: 0.75,
+    },
+    {
+      name: 'Siam Garden Thai Cuisine',
+      address: '735 Bloor St W, Toronto, ON M6G 1L5',
+      latitude: 43.6659,
+      longitude: -79.4221,
+      cuisineType: 'Thai',
+      phone: '416-555-0103',
+      website: 'https://siamgarden.example.com',
+      hours: 'Daily 11:30am–10pm',
+      allergenAware: 'yes',
+      addedByContributorId: SEED_CONTRIBUTOR_ID,
+      completenessScore: 0.95,
+    },
+    {
+      name: 'Jade Dragon Dim Sum',
+      address: '432 Spadina Ave, Toronto, ON M5T 2G6',
+      latitude: 43.6514,
+      longitude: -79.3964,
+      cuisineType: 'Chinese/Dim Sum',
+      phone: '416-555-0104',
+      hours: 'Daily 10am–3pm, 5pm–9pm',
+      allergenAware: 'unknown',
+      addedByContributorId: SEED_CONTRIBUTOR_ID,
+      completenessScore: 0.6,
+    },
+    {
+      name: 'Karma Kitchen',
+      address: '589 Queen St W, Toronto, ON M6J 1E6',
+      latitude: 43.6489,
+      longitude: -79.4151,
+      cuisineType: 'Indian Vegan',
+      phone: '416-555-0105',
+      website: 'https://karmakitchen.example.com',
+      hours: 'Daily 11am–9:30pm',
+      allergenAware: 'yes',
+      addedByContributorId: SEED_CONTRIBUTOR_ID,
+      completenessScore: 0.95,
+    },
+    {
+      name: 'Fresh Kitchen',
+      address: '894 Bloor St W, Toronto, ON M6G 1M1',
+      latitude: 43.6636,
+      longitude: -79.4052,
+      cuisineType: 'Vegetarian/Vegan',
+      phone: '416-555-0106',
+      website: 'https://freshkitchen.example.com',
+      hours: 'Daily 11am–10pm',
+      allergenAware: 'yes',
+      addedByContributorId: SEED_CONTRIBUTOR_ID,
+      completenessScore: 0.9,
+    },
+    {
+      name: 'Planta Fine Dining',
+      address: '1221 Bay St, Toronto, ON M5R 3P5',
+      latitude: 43.6696,
+      longitude: -79.3928,
+      cuisineType: 'Plant-Based Fine Dining',
+      phone: '416-555-0107',
+      website: 'https://planta.example.com',
+      hours: 'Mon–Fri 5pm–10pm, Sat–Sun 11am–10pm',
+      allergenAware: 'yes',
+      addedByContributorId: SEED_CONTRIBUTOR_ID,
+      completenessScore: 0.98,
+    },
+    {
+      name: 'Stack Burger Co.',
+      address: '92 Hanna Ave, Toronto, ON M6K 1X4',
+      latitude: 43.638,
+      longitude: -79.4195,
+      cuisineType: 'Burgers/American',
+      phone: '416-555-0108',
+      hours: 'Daily 11:30am–10pm',
+      allergenAware: 'yes',
+      addedByContributorId: SEED_CONTRIBUTOR_ID,
+      completenessScore: 0.8,
+    },
+    {
+      name: 'Byblos Modern Middle Eastern',
+      address: '11 Duncan St, Toronto, ON M5H 3G8',
+      latitude: 43.6476,
+      longitude: -79.3924,
+      cuisineType: 'Modern Middle Eastern',
+      phone: '416-555-0109',
+      website: 'https://byblos.example.com',
+      hours: 'Tue–Sun 5pm–11pm',
+      allergenAware: 'yes',
+      addedByContributorId: SEED_CONTRIBUTOR_ID,
+      completenessScore: 0.92,
+    },
+    {
+      name: 'Tabule Lebanese Kitchen',
+      address: '810 Mount Pleasant Rd, Toronto, ON M4P 2L2',
+      latitude: 43.7021,
+      longitude: -79.3917,
+      cuisineType: 'Lebanese',
+      phone: '416-555-0110',
+      hours: 'Mon–Sat 11:30am–10pm, Sun 12pm–9pm',
+      allergenAware: 'unknown',
+      addedByContributorId: SEED_CONTRIBUTOR_ID,
+      completenessScore: 0.65,
+    },
+    {
+      name: 'Ramen Republic',
+      address: '840 Dundas St W, Toronto, ON M6J 1T7',
+      latitude: 43.6536,
+      longitude: -79.4284,
+      cuisineType: 'Japanese Ramen',
+      phone: '416-555-0111',
+      website: 'https://ramenrepublic.example.com',
+      hours: 'Tue–Sun 12pm–9pm',
+      allergenAware: 'yes',
+      addedByContributorId: SEED_CONTRIBUTOR_ID,
+      completenessScore: 0.85,
+    },
+    {
+      name: 'Hanami Japanese Restaurant',
+      address: '96 Scollard St, Toronto, ON M5R 1G2',
+      latitude: 43.6717,
+      longitude: -79.3932,
+      cuisineType: 'Japanese',
+      phone: '416-555-0112',
+      website: 'https://hanami.example.com',
+      hours: 'Tue–Sun 5:30pm–10pm',
+      allergenAware: 'yes',
+      addedByContributorId: SEED_CONTRIBUTOR_ID,
+      completenessScore: 0.88,
+    },
+    {
+      name: 'Casa Jalisco',
+      address: '35 Augusta Ave, Toronto, ON M5T 2K5',
+      latitude: 43.6541,
+      longitude: -79.4027,
+      cuisineType: 'Mexican',
+      phone: '416-555-0113',
+      hours: 'Mon–Sat 12pm–10pm',
+      allergenAware: 'yes',
+      addedByContributorId: SEED_CONTRIBUTOR_ID,
+      completenessScore: 0.78,
+    },
+    {
+      name: 'Oceano Seafood & Bar',
+      address: '10 Rees St, Toronto, ON M5V 3G2',
+      latitude: 43.6404,
+      longitude: -79.3841,
+      cuisineType: 'Seafood/Mediterranean',
+      phone: '416-555-0114',
+      website: 'https://oceano.example.com',
+      hours: 'Daily 12pm–11pm',
+      allergenAware: 'yes',
+      addedByContributorId: SEED_CONTRIBUTOR_ID,
+      completenessScore: 0.9,
+    },
+    {
+      name: 'Spice Route Indian Kitchen',
+      address: '1415 Gerrard St E, Toronto, ON M4L 1Z5',
+      latitude: 43.6709,
+      longitude: -79.3264,
+      cuisineType: 'North Indian',
+      phone: '416-555-0115',
+      hours: 'Daily 12pm–10pm',
+      allergenAware: 'yes',
+      addedByContributorId: SEED_CONTRIBUTOR_ID,
+      completenessScore: 0.82,
+    },
+    {
+      name: 'Morning Glory Café',
+      address: '888 Queen St E, Toronto, ON M4M 1J2',
+      latitude: 43.662,
+      longitude: -79.3359,
+      cuisineType: 'Café/Brunch',
+      phone: '416-555-0116',
+      website: 'https://morningglory.example.com',
+      hours: 'Daily 8am–4pm',
+      allergenAware: 'yes',
+      addedByContributorId: SEED_CONTRIBUTOR_ID,
+      completenessScore: 0.93,
+    },
+    {
+      name: 'The Pantry Ossington',
+      address: '237 Ossington Ave, Toronto, ON M6J 2Z8',
+      latitude: 43.6534,
+      longitude: -79.4262,
+      cuisineType: 'Canadian/Café',
+      phone: '416-555-0117',
+      hours: 'Tue–Sun 9am–3pm',
+      allergenAware: 'yes',
+      addedByContributorId: SEED_CONTRIBUTOR_ID,
+      completenessScore: 0.88,
+    },
+    {
+      name: 'Mezes Greek Kitchen',
+      address: '456 Danforth Ave, Toronto, ON M4K 1P4',
+      latitude: 43.6776,
+      longitude: -79.3534,
+      cuisineType: 'Greek',
+      phone: '416-555-0118',
+      hours: 'Mon–Sat 12pm–10pm, Sun 12pm–9pm',
+      allergenAware: 'unknown',
+      addedByContributorId: SEED_CONTRIBUTOR_ID,
+      completenessScore: 0.6,
+    },
+    {
+      name: 'Pho Saigon',
+      address: '1100 Pape Ave, Toronto, ON M4M 2R3',
+      latitude: 43.6714,
+      longitude: -79.3433,
+      cuisineType: 'Vietnamese',
+      phone: '416-555-0119',
+      hours: 'Tue–Sun 11am–9pm',
+      allergenAware: 'unknown',
+      addedByContributorId: SEED_CONTRIBUTOR_ID,
+      completenessScore: 0.55,
+    },
+    {
+      name: 'Banh Mi Boys',
+      address: '399 Queen St W, Toronto, ON M5V 2A5',
+      latitude: 43.6491,
+      longitude: -79.4012,
+      cuisineType: 'Vietnamese/Fusion',
+      phone: '416-555-0120',
+      website: 'https://banhmiboysto.example.com',
+      hours: 'Daily 11am–9pm',
+      allergenAware: 'yes',
+      addedByContributorId: SEED_CONTRIBUTOR_ID,
+      completenessScore: 0.85,
+    },
+    {
+      name: 'Forno 57 Pizzeria',
+      address: '57 King St W, Toronto, ON M5H 1C3',
+      latitude: 43.6443,
+      longitude: -79.3974,
+      cuisineType: 'Italian Pizza',
+      phone: '416-555-0121',
+      hours: 'Mon–Sat 11:30am–10pm',
+      allergenAware: 'yes',
+      addedByContributorId: SEED_CONTRIBUTOR_ID,
+      completenessScore: 0.8,
+    },
+    {
+      name: 'Kupfert & Kim',
+      address: '100 King St W, Toronto, ON M5X 1B1',
+      latitude: 43.648,
+      longitude: -79.3806,
+      cuisineType: 'Vegan Fast-Casual',
+      phone: '416-555-0122',
+      website: 'https://kupfertkim.example.com',
+      hours: 'Mon–Fri 7am–6pm',
+      allergenAware: 'yes',
+      addedByContributorId: SEED_CONTRIBUTOR_ID,
+      completenessScore: 0.95,
+    },
+    {
+      name: 'Tandoor Palace',
+      address: '2100 Lawrence Ave E, Scarborough, ON M1P 2P7',
+      latitude: 43.7282,
+      longitude: -79.3127,
+      cuisineType: 'Indian/Pakistani',
+      phone: '416-555-0123',
+      hours: 'Daily 11am–10pm',
+      allergenAware: 'unknown',
+      addedByContributorId: SEED_CONTRIBUTOR_ID,
+      completenessScore: 0.55,
+    },
+    {
+      name: 'Junction Kitchen & Bar',
+      address: '3020 Dundas St W, Toronto, ON M6P 1Z4',
+      latitude: 43.6638,
+      longitude: -79.4728,
+      cuisineType: 'Canadian Gastropub',
+      phone: '416-555-0124',
+      website: 'https://junctionkitchen.example.com',
+      hours: 'Tue–Sun 5pm–11pm',
+      allergenAware: 'yes',
+      addedByContributorId: SEED_CONTRIBUTOR_ID,
+      completenessScore: 0.9,
+    },
+    {
+      name: 'Taqueria del Norte',
+      address: '824 Bloor St W, Toronto, ON M6G 1M1',
+      latitude: 43.6659,
+      longitude: -79.4264,
+      cuisineType: 'Mexican Taqueria',
+      phone: '416-555-0125',
+      hours: 'Daily 12pm–10pm',
+      allergenAware: 'yes',
+      addedByContributorId: SEED_CONTRIBUTOR_ID,
+      completenessScore: 0.75,
+    },
+  ]
+
+  // Allergen data per place: [placeIndex, allergenCode, accommodationLevel, dedicatedKitchen, sharedFryerRisk, staffTrainingLevel, confidenceLevel, notes?]
+  type AllergenRow = [
+    number,
+    string,
+    string,
+    boolean,
+    boolean,
+    string,
+    string,
+    string | null,
+  ]
+  const allergenRows: AllergenRow[] = [
+    // 0 Trattoria Napoli
+    [0, 'WHEAT', 'menu_options', false, false, 'advanced', 'high', 'GF pasta available on request'],
+    [0, 'MILK', 'aware', false, false, 'basic', 'medium', null],
+    [0, 'EGG', 'aware', false, false, 'basic', 'medium', null],
+    // 1 Momo House
+    [1, 'GLUT', 'aware', false, false, 'basic', 'medium', null],
+    [1, 'SOY', 'aware', false, false, 'basic', 'medium', null],
+    [1, 'WHEAT', 'menu_options', false, false, 'basic', 'medium', 'Rice dumplings available'],
+    // 2 Siam Garden
+    [2, 'PNUT', 'dedicated_section', false, true, 'advanced', 'verified', 'Full peanut-free menu on request; fryers shared across dishes'],
+    [2, 'SES', 'menu_options', false, false, 'advanced', 'high', 'Can sub sesame oil in most dishes'],
+    [2, 'SOY', 'aware', false, false, 'basic', 'medium', null],
+    [2, 'WHEAT', 'aware', false, false, 'basic', 'medium', null],
+    // 3 Jade Dragon
+    [3, 'CRUST', 'aware', false, false, 'none', 'low', 'Staff aware but no dedicated protocol'],
+    [3, 'SOY', 'aware', false, false, 'none', 'low', null],
+    [3, 'WHEAT', 'aware', false, false, 'none', 'low', null],
+    [3, 'SES', 'aware', false, false, 'none', 'low', 'Sesame oil used in many dishes, ask staff'],
+    // 4 Karma Kitchen
+    [4, 'MILK', 'dedicated_section', false, false, 'certified', 'verified', '100% dairy-free kitchen'],
+    [4, 'EGG', 'dedicated_section', false, false, 'certified', 'verified', '100% egg-free kitchen'],
+    [4, 'WHEAT', 'menu_options', false, false, 'advanced', 'high', 'GF options on menu'],
+    [4, 'PNUT', 'aware', false, false, 'advanced', 'high', 'Uses peanut oil in some dishes; staff can advise'],
+    // 5 Fresh Kitchen
+    [5, 'MILK', 'menu_options', false, false, 'advanced', 'high', 'Dairy-free versions of most items'],
+    [5, 'EGG', 'menu_options', false, false, 'advanced', 'high', null],
+    [5, 'WHEAT', 'menu_options', false, false, 'advanced', 'high', null],
+    [5, 'SOY', 'aware', false, false, 'basic', 'medium', null],
+    // 6 Planta
+    [6, 'MILK', 'dedicated_section', false, false, 'certified', 'verified', 'Entirely plant-based — no dairy'],
+    [6, 'EGG', 'dedicated_section', false, false, 'certified', 'verified', 'No eggs used'],
+    [6, 'WHEAT', 'menu_options', false, false, 'advanced', 'high', null],
+    [6, 'PNUT', 'aware', false, false, 'advanced', 'high', null],
+    [6, 'TN-CSH', 'aware', false, false, 'advanced', 'high', 'Cashew cream used in some sauces'],
+    [6, 'SOY', 'menu_options', false, false, 'advanced', 'high', 'Soy-free menu available'],
+    // 7 Stack Burger
+    [7, 'WHEAT', 'menu_options', false, false, 'advanced', 'high', 'GF bun available'],
+    [7, 'MILK', 'menu_options', false, false, 'basic', 'medium', 'Dairy-free cheese available'],
+    [7, 'EGG', 'menu_options', false, false, 'basic', 'medium', null],
+    [7, 'MUST', 'aware', false, false, 'basic', 'medium', null],
+    // 8 Byblos
+    [8, 'SES', 'aware', false, false, 'advanced', 'high', 'Tahini in many dishes; staff can advise'],
+    [8, 'WHEAT', 'menu_options', false, false, 'advanced', 'high', 'GF options available'],
+    [8, 'MILK', 'aware', false, false, 'basic', 'medium', null],
+    [8, 'TN-PST', 'aware', false, false, 'basic', 'medium', 'Pistachios used as garnish'],
+    // 9 Tabule
+    [9, 'SES', 'aware', false, false, 'none', 'low', 'Sesame in hummus and most dressings'],
+    [9, 'WHEAT', 'menu_options', false, false, 'none', 'medium', 'GF pita available'],
+    [9, 'MILK', 'aware', false, false, 'none', 'low', null],
+    // 10 Ramen Republic
+    [10, 'SOY', 'aware', false, false, 'advanced', 'high', 'Soy-free broth available on request'],
+    [10, 'WHEAT', 'aware', false, false, 'basic', 'medium', 'Standard noodles contain wheat; GF noodle sub available'],
+    [10, 'EGG', 'aware', false, false, 'basic', 'medium', 'Egg-free ramen bowls available'],
+    [10, 'SES', 'aware', false, false, 'basic', 'low', null],
+    // 11 Hanami
+    [11, 'SOY', 'aware', false, false, 'advanced', 'high', 'Tamari available as soy-free soy sauce sub'],
+    [11, 'SES', 'aware', false, false, 'basic', 'medium', null],
+    [11, 'FISH', 'aware', false, false, 'advanced', 'high', 'Clear labeling on menu'],
+    [11, 'CRUST', 'menu_options', false, false, 'advanced', 'high', 'Dedicated fryer for shellfish-free items'],
+    // 12 Casa Jalisco
+    [12, 'MILK', 'menu_options', false, false, 'advanced', 'high', 'Dairy-free options clearly marked'],
+    [12, 'WHEAT', 'menu_options', false, false, 'advanced', 'high', 'Corn tortillas available for all dishes'],
+    [12, 'EGG', 'aware', false, false, 'basic', 'medium', null],
+    [12, 'SOY', 'aware', false, false, 'basic', 'medium', null],
+    // 13 Oceano
+    [13, 'CRUST', 'aware', false, false, 'advanced', 'high', 'All shellfish clearly labelled'],
+    [13, 'MOLL', 'aware', false, false, 'advanced', 'high', null],
+    [13, 'FISH', 'aware', false, false, 'advanced', 'high', null],
+    [13, 'MILK', 'menu_options', false, false, 'basic', 'medium', 'Dairy-free sauces available'],
+    // 14 Spice Route
+    [14, 'MILK', 'menu_options', false, false, 'advanced', 'high', 'Many vegan curries; dairy-free clearly marked'],
+    [14, 'WHEAT', 'menu_options', false, false, 'advanced', 'high', 'GF roti available'],
+    [14, 'TN-CSH', 'aware', false, false, 'basic', 'medium', 'Cashews in some sauces'],
+    [14, 'MUST', 'aware', false, false, 'basic', 'medium', 'Mustard seeds used in tempering'],
+    // 15 Morning Glory Café
+    [15, 'WHEAT', 'dedicated_section', false, false, 'certified', 'verified', 'Full GF kitchen; separate prep area'],
+    [15, 'MILK', 'dedicated_section', false, false, 'certified', 'verified', 'All dairy-free options certified'],
+    [15, 'EGG', 'menu_options', false, false, 'advanced', 'high', 'Egg-free baking available'],
+    [15, 'SOY', 'aware', false, false, 'basic', 'medium', null],
+    // 16 The Pantry
+    [16, 'PNUT', 'dedicated_section', false, false, 'certified', 'verified', 'Peanut-free kitchen'],
+    [16, 'TN-ALM', 'dedicated_section', false, false, 'certified', 'verified', null],
+    [16, 'WHEAT', 'menu_options', false, false, 'advanced', 'high', null],
+    [16, 'MILK', 'menu_options', false, false, 'advanced', 'high', null],
+    // 17 Mezes
+    [17, 'MILK', 'aware', false, false, 'none', 'low', null],
+    [17, 'SES', 'aware', false, false, 'none', 'low', 'Tahini used extensively'],
+    [17, 'WHEAT', 'aware', false, false, 'none', 'low', null],
+    // 18 Pho Saigon
+    [18, 'MOLL', 'aware', false, false, 'none', 'low', 'Hoisin sauce contains molluscs'],
+    [18, 'CRUST', 'aware', false, false, 'none', 'low', null],
+    [18, 'SOY', 'aware', false, false, 'none', 'low', null],
+    // 19 Banh Mi Boys
+    [19, 'SOY', 'aware', false, false, 'basic', 'medium', null],
+    [19, 'WHEAT', 'aware', false, false, 'basic', 'medium', null],
+    [19, 'PNUT', 'aware', false, false, 'basic', 'medium', 'Some banh mi contain peanuts; ask staff'],
+    // 20 Forno 57
+    [20, 'WHEAT', 'menu_options', false, false, 'advanced', 'high', 'GF pizza base available'],
+    [20, 'MILK', 'menu_options', false, false, 'basic', 'medium', 'Dairy-free cheese available'],
+    [20, 'EGG', 'aware', false, false, 'basic', 'low', null],
+    // 21 Kupfert & Kim
+    [21, 'WHEAT', 'dedicated_section', false, false, 'certified', 'verified', 'Full allergen menu available'],
+    [21, 'SOY', 'aware', false, false, 'advanced', 'high', null],
+    [21, 'PNUT', 'aware', false, false, 'advanced', 'high', null],
+    [21, 'TN-CSH', 'aware', false, false, 'advanced', 'high', null],
+    [21, 'SES', 'menu_options', false, false, 'advanced', 'high', 'Sesame-free bowls available'],
+    // 22 Tandoor Palace
+    [22, 'MILK', 'aware', false, false, 'none', 'low', null],
+    [22, 'WHEAT', 'aware', false, false, 'none', 'low', null],
+    [22, 'TN-CSH', 'aware', false, false, 'none', 'low', null],
+    // 23 Junction Kitchen
+    [23, 'WHEAT', 'menu_options', false, false, 'advanced', 'high', 'GF options marked on menu'],
+    [23, 'MILK', 'menu_options', false, false, 'basic', 'medium', null],
+    [23, 'EGG', 'menu_options', false, false, 'basic', 'medium', null],
+    [23, 'PNUT', 'dedicated_section', false, false, 'certified', 'verified', 'Peanut-free kitchen'],
+    [23, 'MUST', 'aware', false, false, 'basic', 'medium', null],
+    // 24 Taqueria del Norte
+    [24, 'WHEAT', 'menu_options', false, false, 'advanced', 'high', 'Corn tortillas always available'],
+    [24, 'MILK', 'menu_options', false, false, 'basic', 'medium', null],
+    [24, 'SOY', 'aware', false, false, 'basic', 'low', null],
+  ]
+
+  console.log('Seeding places...')
+
+  for (let i = 0; i < places.length; i++) {
+    const placeData = places[i]
+
+    const place = await prisma.place.upsert({
+      where: {
+        // upsert by name+address to keep idempotent
+        // no unique constraint on those fields in schema, so use create+skip on conflict via findFirst
+        id: '00000000-0000-0000-0000-' + String(i + 1).padStart(12, '0'),
+      },
+      update: placeData,
+      create: {
+        id: '00000000-0000-0000-0000-' + String(i + 1).padStart(12, '0'),
+        ...placeData,
+      },
+    })
+
+    const placeAllergens = allergenRows.filter(([idx]) => idx === i)
+    for (const [, allergenCode, accommodationLevel, dedicatedKitchen, sharedFryerRisk, staffTrainingLevel, confidenceLevel, notes] of placeAllergens) {
+      await prisma.placeAllergen.upsert({
+        where: { placeId_allergenCode: { placeId: place.id, allergenCode } },
+        update: { accommodationLevel, dedicatedKitchen, sharedFryerRisk, staffTrainingLevel, confidenceLevel, notes },
+        create: { placeId: place.id, allergenCode, accommodationLevel, dedicatedKitchen, sharedFryerRisk, staffTrainingLevel, confidenceLevel, notes },
+      })
+    }
+
+    console.log(`  ✓ ${placeData.name}`)
+  }
+
+  console.log(`\nSeeded ${places.length} places with allergen profiles.`)
+}
+
+main()
+  .catch((e) => {
+    console.error(e)
+    process.exit(1)
+  })
+  .finally(() => prisma.$disconnect())
