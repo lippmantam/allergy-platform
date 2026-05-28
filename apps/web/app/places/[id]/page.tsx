@@ -5,9 +5,9 @@ import AllergenBadge from '../../../components/AllergenBadge'
 import CommunitySection from '../../../components/CommunitySection'
 
 const AWARE_BADGE: Record<string, { bg: string; text: string; label: string }> = {
-  yes: { bg: 'bg-green-100', text: 'text-green-800', label: 'Allergen aware' },
-  no: { bg: 'bg-red-100', text: 'text-red-800', label: 'Not allergen aware' },
-  unknown: { bg: 'bg-gray-100', text: 'text-gray-600', label: 'Awareness unknown' },
+  yes:     { bg: 'bg-safe-bg',    text: 'text-safe-text',   label: 'Allergen aware' },
+  no:      { bg: 'bg-warn-bg',    text: 'text-warn-text',   label: 'Not allergen aware' },
+  unknown: { bg: 'bg-surface-border', text: 'text-ink-muted', label: 'Awareness unknown' },
 }
 
 const ACCOMMODATION_ORDER = ['dedicated_section', 'menu_options', 'aware']
@@ -33,63 +33,72 @@ export default async function PlaceDetailPage({ params }: Props) {
   )
 
   return (
-    <main className="max-w-3xl mx-auto px-4 py-8">
-      <Link href="/search" className="text-sm text-teal-600 hover:underline mb-6 inline-block">
+    <main className="max-w-[720px] mx-auto px-5 sm:px-8 py-8 sm:py-10">
+
+      <Link
+        href="/search"
+        className="inline-block font-nunito-sans font-semibold text-[13px] text-brand-green hover:text-brand-green-dark mb-6 transition-colors"
+      >
         ← Back to search
       </Link>
 
-      {/* Header */}
-      <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-6">
+      {/* Header card */}
+      <div className="bg-surface-card rounded-card border-2 border-surface-border p-5 sm:p-6 mb-4">
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{place.name}</h1>
-            <p className="text-gray-500 mt-1">{place.address}</p>
-            <p className="text-sm text-gray-400 mt-0.5">{place.cuisineType}</p>
+            <h1 className="font-nunito font-black text-[22px] sm:text-[26px] text-ink-heading leading-tight">
+              {place.name}
+            </h1>
+            <p className="font-nunito-sans text-[14px] text-ink-muted mt-1">{place.address}</p>
+            <p className="font-nunito-sans text-[13px] text-ink-subtle mt-0.5">{place.cuisineType}</p>
           </div>
-          <span className={`text-sm font-medium px-3 py-1.5 rounded-full ${aware.bg} ${aware.text}`}>
+          <span className={`font-nunito font-bold text-[12px] px-3 py-1.5 rounded-chip ${aware.bg} ${aware.text}`}>
             {aware.label}
           </span>
         </div>
 
-        <div className="mt-5 flex flex-wrap gap-4 text-sm text-gray-600 border-t border-gray-100 pt-4">
-          {place.hours && (
-            <div>
-              <span className="font-medium text-gray-900">Hours</span>
-              <p>{place.hours}</p>
-            </div>
-          )}
-          {place.phone && (
-            <div>
-              <span className="font-medium text-gray-900">Phone</span>
-              <p>
-                <a href={`tel:${place.phone}`} className="text-teal-600 hover:underline">
+        {(place.hours || place.phone || place.website) && (
+          <div className="mt-5 pt-4 border-t border-dashed border-surface-nav flex flex-wrap gap-5 font-nunito-sans text-[13px] text-ink-muted">
+            {place.hours && (
+              <div>
+                <span className="font-semibold text-ink-primary block">Hours</span>
+                {place.hours}
+              </div>
+            )}
+            {place.phone && (
+              <div>
+                <span className="font-semibold text-ink-primary block">Phone</span>
+                <a href={`tel:${place.phone}`} className="text-brand-green hover:text-brand-green-dark transition-colors">
                   {place.phone}
                 </a>
-              </p>
-            </div>
-          )}
-          {place.website && (
-            <div>
-              <span className="font-medium text-gray-900">Website</span>
-              <p>
-                <a href={place.website} target="_blank" rel="noopener noreferrer" className="text-teal-600 hover:underline">
+              </div>
+            )}
+            {place.website && (
+              <div>
+                <span className="font-semibold text-ink-primary block">Website</span>
+                <a href={place.website} target="_blank" rel="noopener noreferrer"
+                  className="text-brand-green hover:text-brand-green-dark transition-colors">
                   Visit website
                 </a>
-              </p>
-            </div>
-          )}
-        </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Allergen accommodations */}
-      <section className="bg-white border border-gray-200 rounded-2xl p-6 mb-6">
+      <div className="bg-surface-card rounded-card border-2 border-surface-border p-5 sm:p-6 mb-4">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-semibold text-gray-900">Allergen accommodations</h2>
-          <span className="text-xs text-gray-400">{place.allergens.length} tracked</span>
+          <h2 className="font-nunito font-black text-[16px] text-ink-heading">
+            Allergen accommodations
+          </h2>
+          <span className="font-nunito-sans text-[12px] text-ink-subtle">
+            {place.allergens.length} tracked
+          </span>
         </div>
 
         {sortedAllergens.length === 0 ? (
-          <p className="text-sm text-gray-400">No allergen data recorded yet.</p>
+          <p className="font-nunito-sans text-[13px] text-ink-muted">No allergen data recorded yet.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {sortedAllergens.map((a) => (
@@ -103,18 +112,18 @@ export default async function PlaceDetailPage({ params }: Props) {
           </div>
         )}
 
-        <div className="mt-4 border-t border-gray-100 pt-4 flex gap-4 text-xs text-gray-500">
+        <div className="mt-4 pt-4 border-t border-dashed border-surface-nav flex flex-wrap gap-4 font-nunito-sans text-[12px] text-ink-muted">
           <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded bg-green-300" /> Dedicated section
+            <span className="w-2 h-2 rounded bg-safe-bg border border-safe-text/30" /> Dedicated section
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded bg-blue-300" /> Menu options
+            <span className="w-2 h-2 rounded bg-[#DBEAFE] border border-brand-blue/30" /> Menu options
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded bg-yellow-300" /> Staff aware
+            <span className="w-2 h-2 rounded bg-warn-bg border border-warn-text/30" /> Staff aware
           </span>
         </div>
-      </section>
+      </div>
 
       {/* Community reports & reviews */}
       <CommunitySection
@@ -123,23 +132,24 @@ export default async function PlaceDetailPage({ params }: Props) {
         initialReviews={reviewsData.reviews}
       />
 
-      {/* Disclaimer */}
-      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800">
-        <strong>Always verify directly with the restaurant.</strong> This information is
-        community-sourced and may be outdated. Cross-contamination risk varies. Do not rely solely
-        on this platform for life-threatening allergies.
+      {/* Safety disclaimer */}
+      <div className="bg-warn-bg border-2 border-brand-amber/40 rounded-[14px] p-4 font-nunito-sans text-[13px] text-warn-text mt-4">
+        <strong className="font-bold">Always verify directly with the restaurant.</strong>{' '}
+        This information is community-sourced and may be outdated. Cross-contamination risk varies.
+        Do not rely solely on this platform for life-threatening allergies.
       </div>
 
-      {/* Add to this place */}
+      {/* Suggest update */}
       <div className="mt-6 text-center">
-        <p className="text-sm text-gray-500 mb-2">Know something we don&apos;t?</p>
+        <p className="font-nunito-sans text-[13px] text-ink-muted mb-1.5">Know something we don&apos;t?</p>
         <Link
           href={`/places/${place.id}/edit`}
-          className="text-sm text-teal-600 hover:underline"
+          className="font-nunito-sans font-semibold text-[13px] text-brand-green hover:text-brand-green-dark transition-colors"
         >
           Suggest an update
         </Link>
       </div>
+
     </main>
   )
 }
